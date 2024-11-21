@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 fake = Faker()
 
 # Number of rows to generate
-num_rows = 2000
+num_rows = 500
 
 # Generate unique user IDs (random numbers between 1 and 1000)
 user_ids = random.choices(range(1, 1001), k=num_rows)
@@ -59,28 +59,97 @@ user_ids = random.choices(range(1, 1001), k=num_rows)
 # }
 
 # Generate dummy data
+# data = {
+#     "messageId": list(range(1, num_rows + 1)),  # Sequential message IDs from 1 to num_rows
+#     "senderId": [],  # List to store sender IDs
+#     "receiverId": [],  # List to store receiver IDs
+#     "messageText": [fake.text(max_nb_chars=2000) for _ in range(num_rows)],  # Random message text (max 2000 chars)
+#     "subjectOfMessage": [fake.sentence(nb_words=5) for _ in range(num_rows)],  # Random subject with 5 words
+#     "dateSent": [fake.date_this_year() for _ in range(num_rows)],  # Random dates within this year
+# }
+
+# data = {
+#     "propertyID": list(range(1, num_rows + 1)),  # Sequential property IDs
+#     "creatorId": [random.randint(1, 1000) for _ in range(num_rows)],  # Random creator IDs
+#     "address": [fake.address().replace("\n", ", ") for _ in range(num_rows)],  # Random addresses
+#     "isAvailable": [random.choice([0, 1]) for _ in range(num_rows)],  # Random 0 or 1
+#     "datePosted": [fake.date_between(start_date="-1y", end_date="today") for _ in range(num_rows)],  # Random dates
+#     "hasBroker": [random.choice([0, 1]) for _ in range(num_rows)],  # Random 0 or 1 for broker involvement
+#     "brokerId": [random.randint(1001, 1100) if has_broker else None for has_broker in [random.choice([0, 1]) for _ in range(num_rows)]],  # Broker ID if hasBroker=1
+#     "buildingFeatures": [
+#         ", ".join(random.sample(["Pool", "Gym", "Parking", "Elevator", "Laundry", "Garden"], random.randint(1, 4)))
+#         for _ in range(num_rows)
+#     ],  # Random features
+#     "dscrptn": [fake.sentence(nb_words=15) for _ in range(num_rows)],  # Random short descriptions
+#     "monthlyRent": [round(random.uniform(500, 5000), 2) for _ in range(num_rows)],  # Rent between $500 and $5000
+#     "deposit": [round(random.uniform(500, 3000), 2) for _ in range(num_rows)],  # Deposit between $500 and $3000
+#     "utilitiesIncluded": [random.choice([0, 1]) for _ in range(num_rows)],  # Random 0 or 1
+#     "appliancesIncluded": [random.choice([0, 1]) for _ in range(num_rows)],  # Random 0 or 1
+# }
+
+# data = {
+#     "propertyId": list(range(500, num_rows + 500)),  # Sequential property IDs
+#     "creatorId": [random.randint(1, 1000) for _ in range(num_rows)],  # Random creator IDs
+#     "address": [fake.address().replace("\n", ", ") for _ in range(num_rows)],  # Random addresses
+#     "isAvailable": [random.choice([0, 1]) for _ in range(num_rows)],  # Random 0 or 1
+#     "datePosted": [fake.date_between(start_date="-1y", end_date="today") for _ in range(num_rows)],  # Random dates
+#     "hasBroker": [random.choice([0, 1]) for _ in range(num_rows)],  # Random 0 or 1 for broker involvement
+#     "brokerId": [random.randint(1001, 1100) if has_broker else None for has_broker in [random.choice([0, 1]) for _ in range(num_rows)]],  # Broker ID if hasBroker=1
+#     "buildingFeatures": [
+#         ", ".join(random.sample(["Pool", "Gym", "Parking", "Elevator", "Laundry", "Garden"], random.randint(1, 4)))
+#         for _ in range(num_rows)
+#     ],  # Random building features
+#     "dscrptn": [fake.sentence(nb_words=15) for _ in range(num_rows)],  # Short random descriptions
+#     "sellingPrice": [round(random.uniform(200000, 2000000), 2) for _ in range(num_rows)],  # Selling price
+#     "annualPropertyTax": [
+#         round(price * random.uniform(0.005, 0.02), 2) for price in [round(random.uniform(200000, 2000000), 2) for _ in range(num_rows)]
+#     ],  # Property tax (0.5%-2% of sellingPrice)
+#     "basementFinished": [random.choice([0, 1]) for _ in range(num_rows)],  # Random 0 or 1
+#     "averagePricePerSquareFoot": [round(random.uniform(100, 500), 2) for _ in range(num_rows)],  # Price per square foot
+#     "expectedSellDate": [
+#     (date_posted + timedelta(days=random.randint(180, 730))).strftime("%Y-%m-%d")
+#     for date_posted in [fake.date_between(start_date="-1y", end_date="today") for _ in range(num_rows)]
+#     ],  # Random future date (6 months to 2 years from datePosted)
+# }
+
+
+# # Ensure senderId and receiverId are different
+# for _ in range(num_rows):
+#     sender = random.choice(user_ids)
+#     receiver = random.choice([user_id for user_id in user_ids if user_id != sender])  # Ensure receiver is not the sender
+#     data["senderId"].append(sender)
+#     data["receiverId"].append(receiver)
+
+listing_prices = [round(random.uniform(100000, 1000000), 2) for _ in range(num_rows)]
+final_prices = []
+
+for listing_price in listing_prices:
+    # Calculate final price based on a condition
+    if random.random() > 0.2:
+        final_price = listing_price - random.randint(0, 5000)
+    else:
+        final_price = listing_price
+    final_prices.append(final_price)
+    
 data = {
-    "messageId": list(range(1, num_rows + 1)),  # Sequential message IDs from 1 to num_rows
-    "senderId": [],  # List to store sender IDs
-    "receiverId": [],  # List to store receiver IDs
-    "messageText": [fake.text(max_nb_chars=2000) for _ in range(num_rows)],  # Random message text (max 2000 chars)
-    "subjectOfMessage": [fake.sentence(nb_words=5) for _ in range(num_rows)],  # Random subject with 5 words
-    "dateSent": [fake.date_this_year() for _ in range(num_rows)],  # Random dates within this year
+    "transactionId": list(range(1, num_rows + 1)),  # Sequential IDs for transactions
+    "buyerId": [random.randint(1, 1000) for _ in range(num_rows)],  # Random buyer IDs
+    "sellerId": [random.randint(1, 1000) for _ in range(num_rows)],  # Random seller IDs
+    "brokerId": [random.randint(1, 1000) if random.random() > 0.3 else None for _ in range(num_rows)],  # Optional broker IDs
+    "propertyId": [random.randint(1, 500) for _ in range(num_rows)],  # Random property IDs
+    "commission": [round(random.uniform(500, 5000), 2) for _ in range(num_rows)],  # Random commission amounts
+    "stat": [random.choice(["Pending", "Completed", "Cancelled"]) for _ in range(num_rows)],  # Random status
+    "paymentMethod": [random.choice(["Credit Card", "Bank Transfer", "Cash"]) for _ in range(num_rows)],  # Payment method
+    "finalPrice": final_prices,  # Use the generated final prices
+    "listingPrice": listing_prices,  # Use the generated listing prices
+    "transactionDate": [fake.date_between(start_date="-2y", end_date="today") for _ in range(num_rows)],  # Random transaction dates
 }
-
-# Ensure senderId and receiverId are different
-for _ in range(num_rows):
-    sender = random.choice(user_ids)
-    receiver = random.choice([user_id for user_id in user_ids if user_id != sender])  # Ensure receiver is not the sender
-    data["senderId"].append(sender)
-    data["receiverId"].append(receiver)
-
 
 # Create a DataFrame
 df = pd.DataFrame(data)
 
 # Save to a CSV file (optional)
-df.to_csv("message.csv", index=False)
+df.to_csv("transaction.csv", index=False)
 
 # Display a few rows
 print(df.head())
